@@ -11,7 +11,6 @@ export const ChatWidget = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,7 +26,6 @@ export const ChatWidget = () => {
     setMessages(newMessages);
     setInput("");
     setIsTyping(true);
-    setIsLoading(true);
 
     const response = await fetch("/api/assistance", {
       method: "POST",
@@ -51,7 +49,6 @@ export const ChatWidget = () => {
 
     setMessages(updatedMessages);
     setIsTyping(false);
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -88,10 +85,10 @@ export const ChatWidget = () => {
           />
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isTyping}
             className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            {isLoading ? (
+            {isTyping ? (
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
               <Send className="w-5 h-5" />
