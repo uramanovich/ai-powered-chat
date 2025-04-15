@@ -34,7 +34,6 @@ export async function generateChatResponse(
     const formattedMessages = messages.map((msg) => ({
       role: msg.role,
       content: msg.content,
-      name: msg.name,
     }));
 
     // Call OpenAI API

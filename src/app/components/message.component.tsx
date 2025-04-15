@@ -1,4 +1,4 @@
-import { ChatMessage } from "../../chat-widget.type";
+import { ChatMessage } from "../schemas/chat";
 
 type Props = {
   message: ChatMessage;

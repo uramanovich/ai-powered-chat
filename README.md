@@ -2,7 +2,7 @@
 
 ## Tech Stack
 
-- Nest.js - framework
+- Next.js - framework
 - Tailwind CSS - styles
 - lucide-react - icons
 - Zod - schema validation
