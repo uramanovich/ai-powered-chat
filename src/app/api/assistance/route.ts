@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
 import { chatMessageSchema } from "@/app/schemas/chat";
-import { generateChatResponse } from "@/app/libs/openai";
+import { processChatRequest } from "@/app/libs/processor";
 
 const requestBodySchema = z.object({
   messages: z.array(chatMessageSchema),
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
   const { messages } = parsedBody.data;
 
-  const content = await generateChatResponse(messages);
+  const content = await processChatRequest(messages);
 
-  return NextResponse.json({ message: content });
+  return NextResponse.json({ message: content.response });
 }

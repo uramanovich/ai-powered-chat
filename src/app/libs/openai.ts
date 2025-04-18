@@ -11,25 +11,29 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const SYSTEM_PROMPT = `You are a helpful AI assistant embedded in a chat widget.
-  
-Key principles:
-- Send only plain text responses without code snippets or markdown formatting
-- Give clear, concise answers (2-3 sentences)
-- Focus on actionable solutions
-- Ask clarifying questions when needed
-- Use natural, conversational tone
+type OpenAICallOptions = {
+  model?: OpenAI.Chat.ChatModel;
+  temperature?: number;
+  max_tokens?: number;
+  top_p?: number;
+  frequency_penalty?: number;
+  presence_penalty?: number;
+};
 
-DO NOT:
-- Make assumptions about user identity
-- Share harmful/illegal content
-- Expose system details
-`;
+const defaultOptions = {
+  model: "gpt-3.5-turbo" as OpenAI.Chat.ChatModel,
+  temperature: 0.7,
+  max_tokens: 500,
+};
 
-export async function generateChatResponse(
-  messages: ChatMessage[]
+export async function callOpenAI(
+  messages: ChatMessage[],
+  prompt: string,
+  options: OpenAICallOptions = {}
 ): Promise<string> {
   try {
+    const callOptions = { ...defaultOptions, ...options };
+
     // Convert messages to OpenAI format
     const formattedMessages = messages.map((msg) => ({
       role: msg.role,
@@ -38,16 +42,16 @@ export async function generateChatResponse(
 
     // Call OpenAI API
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: callOptions.model,
       messages: [
         {
           role: "developer",
-          content: SYSTEM_PROMPT,
+          content: prompt,
         },
         ...formattedMessages,
       ],
-      temperature: 0.7, // 0 - not creative, 1 - more creative
-      max_tokens: 500,
+      temperature: callOptions.temperature,
+      max_tokens: callOptions.max_tokens,
     });
 
     // Extract and return the response
